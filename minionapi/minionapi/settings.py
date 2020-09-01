@@ -67,8 +67,9 @@ REST_FRAMEWORK = {
     ],
 }
 
-CORS_ORIGIN_WHITELIST = [
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://minion-spa.herokuapp.com"
 ]
 
 ROOT_URLCONF = 'minionapi.urls'
