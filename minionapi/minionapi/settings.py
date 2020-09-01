@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+import dj_database_url
 import os
 
 from dotenv import load_dotenv
@@ -108,11 +109,14 @@ DATABASES = {
     #     'HOST': os.getenv("PG_HOST"),
     #     'PORT': os.getenv("PG_PORT"),
     # }
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES["default"].update(db_from_env)
 
 
 # Password validation
