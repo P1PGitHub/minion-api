@@ -12,7 +12,7 @@ class AccountTeamDetail(generics.RetrieveAPIView):
     serializer_class = serializers.TeamSerializer
 
     def get_object(self):
-        return models.Team.objects.get(pk=self.request.user.team)
+        return self.request.user.team
 
 
 class TeamIDDetail(generics.RetrieveAPIView):
