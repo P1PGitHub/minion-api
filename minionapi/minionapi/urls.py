@@ -16,12 +16,17 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 from django.urls import include, path
 from rest_framework_simplejwt import views as jwt_views
 
 from . import views
 
 urlpatterns = [
+    path("", views.HomeView.as_view(), name="home"),
+    path('favicon.ico', RedirectView.as_view(
+        url=staticfiles_storage.url('img/favicon.ico'))),
     path('admin/', admin.site.urls),
     path('api/token/', jwt_views.TokenObtainPairView.as_view(),
          name='token_obtain_pair'),
