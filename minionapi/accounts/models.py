@@ -61,7 +61,14 @@ class Account(AbstractBaseUser):
         max_length=255,
         unique=True
     )
-    team = models.UUIDField(blank=True, null=True)
+    team = models.ForeignKey(
+        "teams.Team",
+        models.SET_NULL,
+        related_name="teams",
+        related_query_name="team",
+        blank=True,
+        null=True
+    )
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)

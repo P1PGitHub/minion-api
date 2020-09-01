@@ -13,13 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import dj_database_url
 import os
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -101,22 +96,21 @@ WSGI_APPLICATION = 'minionapi.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': os.getenv("PG_NAME"),
-    #     'USER': os.getenv("PG_USER"),
-    #     'PASSWORD': os.getenv("PG_PASS"),
-    #     'HOST': os.getenv("PG_HOST"),
-    #     'PORT': os.getenv("PG_PORT"),
-    # }
+    # Development Database
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "daq2lr0pc3ogb7",
+        'USER': "apfbpyejebbdrx",
+        'PASSWORD': "bb53648d8d8ad4c5aad11b60ce45aefca2a18ebfccf8ec6e1ed4806e68e84290",
+        'HOST': "ec2-54-91-178-234.compute-1.amazonaws.com",
+        'PORT': "5432",
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES["default"].update(db_from_env)
+if not DEBUG:
+    # Production Database
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    DATABASES["default"].update(db_from_env)
 
 
 # Password validation
@@ -160,6 +154,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(os.path.normpath(BASE_DIR), "static")
 ]
-print(STATICFILES_DIRS)
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
