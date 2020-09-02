@@ -28,8 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "minion-api.herokuapp.com",
-    "minion-api-dev.herokuapp.com"
+    "minion-api.herokuapp.com"
 ]
 
 
@@ -39,7 +38,7 @@ AUTH_USER_MODEL = "accounts.Account"
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -100,12 +99,19 @@ WSGI_APPLICATION = 'minionapi.wsgi.application'
 DATABASES = {
     # Development Database
     'default': {
-        "name": "Default DB"
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': "d28kpnrun8naaa",
+        'USER': "gtjekbkhxktfzu",
+        'PASSWORD': "1bb5307cc29bf5be14590bcf43ee8083b9f96a1600e01a6cfa7e575686124d66",
+        'HOST': "ec2-54-147-54-83.compute-1.amazonaws.com",
+        'PORT': "5432",
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES["default"].update(db_from_env)
+if not DEBUG:
+    # Production Database
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    DATABASES["default"].update(db_from_env)
 
 
 # Password validation
