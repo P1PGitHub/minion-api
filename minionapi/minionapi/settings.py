@@ -100,19 +100,12 @@ WSGI_APPLICATION = 'minionapi.wsgi.application'
 DATABASES = {
     # Development Database
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "daq2lr0pc3ogb7",
-        'USER': "apfbpyejebbdrx",
-        'PASSWORD': "bb53648d8d8ad4c5aad11b60ce45aefca2a18ebfccf8ec6e1ed4806e68e84290",
-        'HOST': "ec2-54-91-178-234.compute-1.amazonaws.com",
-        'PORT': "5432",
+        "name": "Default DB"
     }
 }
 
-if not DEBUG:
-    # Production Database
-    db_from_env = dj_database_url.config(conn_max_age=600)
-    DATABASES["default"].update(db_from_env)
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES["default"].update(db_from_env)
 
 
 # Password validation
