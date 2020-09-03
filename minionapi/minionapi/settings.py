@@ -68,7 +68,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    "localhost:3000",
     "https://minion-spa.herokuapp.com"
 ]
 
