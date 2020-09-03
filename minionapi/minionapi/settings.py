@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "minion-api.herokuapp.com"
+    "minion-api-dev.herokuapp.com"
 ]
 
 
