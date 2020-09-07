@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "minion-api.herokuapp.com"
+    "minion-api-dev.herokuapp.com"
 ]
 
 
@@ -36,10 +36,10 @@ ALLOWED_HOSTS = [
 AUTH_USER_MODEL = "accounts.Account"
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -100,10 +100,17 @@ DATABASES = {
     # Development Database
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+<<<<<<< HEAD
         'NAME': "d7fdugji6uusjf",
         'USER': "zjprrwbiwzprem",
         'PASSWORD': "950ee87131779aae048768b5f653cd1cb4a8b28d330f9a930a980617b2bd2211",
         'HOST': "ec2-54-160-120-28.compute-1.amazonaws.com",
+=======
+        'NAME': "d28kpnrun8naaa",
+        'USER': "gtjekbkhxktfzu",
+        'PASSWORD': "1bb5307cc29bf5be14590bcf43ee8083b9f96a1600e01a6cfa7e575686124d66",
+        'HOST': "ec2-54-147-54-83.compute-1.amazonaws.com",
+>>>>>>> dev
         'PORT': "5432",
     }
 }
