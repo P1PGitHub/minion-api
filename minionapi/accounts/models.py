@@ -95,7 +95,8 @@ class Account(AbstractBaseUser):
 
     objects = AccountManager()
 
-    def get_full_name(self):
+    @property
+    def full_name(self):
         if self.first_name or self.last_name:
             return f"{self.last_name}, {self.first_name}"
         else:
