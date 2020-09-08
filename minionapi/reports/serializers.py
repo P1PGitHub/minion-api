@@ -49,3 +49,14 @@ class TimeEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TimeEntry
         fields = "__all__"
+
+
+class CustomerServiceNestedSerializer(serializers.ModelSerializer):
+
+    inventory_checkouts = InventoryCheckOutSerializer(many=True)
+    time_records = TimeEntrySerializer(many=True)
+    signature = SignatureSerializer()
+
+    class Meta:
+        model = models.CustomerService
+        fields = "__all__"

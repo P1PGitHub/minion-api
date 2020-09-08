@@ -87,6 +87,13 @@ class CustomerServiceRecentList(generics.ListAPIView):
         ).filter(draft=False).order_by("-created_at")[:10]
 
 
+class CustomerServiceRetrieveUpdate(generics.RetrieveUpdateAPIView):
+
+    serializer_class = serializers.CustomerServiceNestedSerializer
+    permissions = [IsAuthenticated]
+    queryset = models.CustomerService.objects.all()
+
+
 class CustomerServiceSimpleList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
