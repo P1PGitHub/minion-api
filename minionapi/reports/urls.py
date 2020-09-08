@@ -15,7 +15,7 @@ urlpatterns = [
          name="customer-service-drafts-list"),
     path("customer_service/recent/", views.CustomerServiceRecentList.as_view(),
          name="customer-service-drafts-list"),
-    path("sign/", views.SignatureUpload.as_view(), name="signature-upload"),
+    path("sign/", views.SignatureCreate.as_view(), name="signature-create"),
     path("sign/<signature_id>/", views.SignatureRetreiveDelete.as_view(),
          name="signature-upload"),
     path("<report_id>/",

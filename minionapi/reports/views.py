@@ -129,7 +129,7 @@ class InventoryClear(APIView):
         return Response(status=204)
 
 
-class SignatureRetreiveDelete(generics.RetrieveDestroyAPIView):
+class SignatureRetreiveDelete(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = serializers.SignatureSerializer
     permissions = [IsAuthenticated]
@@ -137,33 +137,11 @@ class SignatureRetreiveDelete(generics.RetrieveDestroyAPIView):
     def get_object(self):
         return get_object_or_404(models.Signature, id=self.kwargs["signature_id"])
 
-    def delete(self, request, *args, **kwargs):
-        signature = self.get_object()
-        file_path = os.path.join(settings.MEDIA_ROOT, str(signature.file))
-        print(file_path)
-        os.remove(file_path)
-        remove_empty_folders(os.path.dirname(file_path))
-        signature.delete()
-        return Response(status=204)
 
+class SignatureCreate(generics.CreateAPIView):
 
-class SignatureUpload(APIView):
-
-    parser_class = [MultiPartParser]
+    serializer_class = serializers.SignatureSerializer
     permissions = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-
-        signature_serializer = serializers.SignatureSerializer(
-            data=request.data
-        )
-
-        if signature_serializer.is_valid():
-            signature_serializer.save()
-            return Response(signature_serializer.data, status=201)
-        else:
-            print(signature_serializer.errors)
-            return Response(signature_serializer.errors, status=400)
 
 
 class TimeEntryListCreate(generics.ListCreateAPIView):
