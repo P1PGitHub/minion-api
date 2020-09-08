@@ -35,6 +35,7 @@ class Report(models.Model):
     company_id = models.PositiveIntegerField(verbose_name="Company ID")
     company_name = models.CharField(
         max_length=255, verbose_name="Company Name")
+    location = models.CharField(max_length=255)
     report_type = models.CharField(max_length=255, choices=REPORT_CHOICES)
     draft = models.BooleanField(default=True)
 
