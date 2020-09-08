@@ -19,13 +19,6 @@ SERVICE_CHOICES = [
 ]
 
 
-def folder(instance, filename):
-    formatted_filename = datetime.now().strftime("%Y%m%d-%H%M%S.png")
-    file_path = os.path.join("uploads", "signatures", slugify(
-        instance.company), slugify(instance.client), formatted_filename)
-    return file_path
-
-
 class Signature(models.Model):
 
     ref = models.CharField(max_length=1024)
@@ -33,7 +26,7 @@ class Signature(models.Model):
     client = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.file.name
+        return self.ref
 
 
 class Report(models.Model):
