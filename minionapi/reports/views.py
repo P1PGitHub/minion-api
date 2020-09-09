@@ -55,7 +55,7 @@ class CustomerServiceList(generics.ListCreateAPIView):
         ).order_by("-created_at")
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, team=self.request.user.team)
+        serializer.save(author=self.request.user)
 
 
 class CustomerServiceDraftsList(generics.ListAPIView):
