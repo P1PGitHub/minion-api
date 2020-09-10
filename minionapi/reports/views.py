@@ -98,7 +98,8 @@ class CustomerServiceSimpleList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
     permissions = [IsAuthenticated]
-    queryset = models.CustomerService.objects.all()
+    queryset = models.CustomerService.objects.all().order_by(
+        "-created_at")[:10]
 
 
 class InventoryCheckOutListCreate(generics.ListCreateAPIView):
@@ -107,7 +108,7 @@ class InventoryCheckOutListCreate(generics.ListCreateAPIView):
     permissions = [IsAuthenticated]
 
     def get_queryset(self):
-        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id"))
+        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id")).order_by("-created_at")[:10]
 
     def get_serializer(self, *args, **kwargs):
         if "data" in kwargs:
