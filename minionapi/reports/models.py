@@ -58,6 +58,12 @@ class Report(models.Model):
         related_query_name="edited_report",
         verbose_name="Last Edited By"
     )
+    team = models.ForeignKey(
+        "teams.team",
+        models.CASCADE,
+        related_name="reports",
+        related_query_name="report",
+    )
 
     def __str__(self):
         return f"{self.company_name} - {self.report_type}"

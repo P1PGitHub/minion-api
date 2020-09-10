@@ -14,19 +14,6 @@ from . import models
 from . import serializers
 
 
-def remove_empty_folders(file_path):
-    if not os.path.isdir(file_path):
-        print("not dir")
-        return
-
-    files = os.listdir(file_path)
-    if not len(files) and not file_path + os.sep == settings.MEDIA_ROOT:
-        os.rmdir(file_path)
-        remove_empty_folders(os.path.dirname(file_path))
-    else:
-        return
-
-
 class ReportDetail(generics.RetrieveDestroyAPIView):
 
     serializer_class = serializers.ReportSerializer
@@ -59,7 +46,13 @@ class CustomerServiceList(generics.ListCreateAPIView):
 
     serializer_class = serializers.CustomerServiceSerializer
     permissions = [IsAuthenticated]
-    queryset = models.CustomerService.objects.all()
+
+    def get_queryset(self):
+        return models.CustomerService.objects.filter(
+            team=self.request.user.team
+        ).filter(
+            draft=False
+        ).order_by("-created_at")
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -98,7 +91,13 @@ class CustomerServiceSimpleList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
     permissions = [IsAuthenticated]
-    queryset = models.CustomerService.objects.all()
+
+    def get_queryset(self):
+        return models.CustomerService.objects.filter(
+            team=self.request.user.team
+        ).filter(
+            draft=False
+        ).order_by("-created_at")
 
 
 class InventoryCheckOutListCreate(generics.ListCreateAPIView):
@@ -107,7 +106,7 @@ class InventoryCheckOutListCreate(generics.ListCreateAPIView):
     permissions = [IsAuthenticated]
 
     def get_queryset(self):
-        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id"))
+        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id")).order_by("-created_at")[:10]
 
     def get_serializer(self, *args, **kwargs):
         if "data" in kwargs:
