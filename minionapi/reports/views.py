@@ -93,6 +93,8 @@ class CustomerServiceSimpleList(generics.ListAPIView):
     permissions = [IsAuthenticated]
 
     def get_queryset(self):
+        print(self.request.user)
+        print(self.request.user.team)
         return models.CustomerService.objects.filter(
             team=self.request.user.team
         ).filter(
