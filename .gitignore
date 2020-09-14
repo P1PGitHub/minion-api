@@ -219,3 +219,6 @@ pyvenv.cfg
 pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,venvi
+
+# Firebase
+minionapi/minionapi/firebase/service_account.json
