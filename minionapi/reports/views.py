@@ -5,6 +5,7 @@ import os
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,6 +13,12 @@ from rest_framework.views import APIView
 
 from . import models
 from . import serializers
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 25
+    page_size_query_param = 'page_size'
+    max_page_size = 25
 
 
 class ReportDetail(generics.RetrieveDestroyAPIView):
@@ -91,6 +98,7 @@ class CustomerServiceSimpleList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
     permissions = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         print(self.request.user)
