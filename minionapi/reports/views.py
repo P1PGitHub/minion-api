@@ -65,7 +65,19 @@ class CustomerServiceList(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class CustomerServiceDraftsList(generics.ListAPIView):
+class CustomerServiceSimpleDraftsList(generics.ListAPIView):
+
+    serializer_class = serializers.CustomerServiceSimpleSerializer
+    permissions = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        return models.CustomerService.objects.filter(
+            author=self.request.user
+        ).filter(draft=True).order_by("-created_at")
+
+
+class CustomerServiceRecentDraftsList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
     permissions = [IsAuthenticated]
