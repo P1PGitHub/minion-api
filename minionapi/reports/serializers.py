@@ -58,6 +58,11 @@ class CustomerServiceNestedSerializer(serializers.ModelSerializer):
     time_records = TimeEntrySerializer(
         many=True, required=False, allow_null=True)
     signature = SignatureSerializer(required=False, allow_null=True)
+    signatureID = serializers.PrimaryKeyRelatedField(
+        queryset=models.signature.objects.all(),
+        required=True,
+        source='signature',
+    )
 
     class Meta:
         model = models.CustomerService
