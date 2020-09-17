@@ -61,7 +61,8 @@ class CustomerServiceNestedSerializer(serializers.ModelSerializer):
     signatureID = serializers.PrimaryKeyRelatedField(
         queryset=models.Signature.objects.all(),
         required=True,
-        source='Signature',
+        source='signature',
+        write_only=True
     )
 
     class Meta:
