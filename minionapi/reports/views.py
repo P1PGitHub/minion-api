@@ -85,7 +85,7 @@ class CustomerServiceRecentDraftsList(generics.ListAPIView):
     def get_queryset(self):
         return models.CustomerService.objects.filter(
             author=self.request.user
-        ).filter(draft=True).order_by("-created_at")[:10]
+        ).filter(draft=True).order_by("-created_at")[:5]
 
 
 class CustomerServiceRecentList(generics.ListAPIView):
@@ -96,7 +96,7 @@ class CustomerServiceRecentList(generics.ListAPIView):
     def get_queryset(self):
         return models.CustomerService.objects.filter(
             author=self.request.user
-        ).filter(draft=False).order_by("-created_at")[:10]
+        ).filter(draft=False).order_by("-created_at")[:5]
 
 
 class CustomerServiceRetrieveUpdate(generics.RetrieveUpdateAPIView):
@@ -128,7 +128,7 @@ class InventoryCheckOutListCreate(generics.ListCreateAPIView):
     permissions = [IsAuthenticated]
 
     def get_queryset(self):
-        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id")).order_by("-created_at")[:10]
+        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id")).order_by("-created_at")[:5]
 
     def get_serializer(self, *args, **kwargs):
         if "data" in kwargs:
