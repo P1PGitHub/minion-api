@@ -73,7 +73,7 @@ class CustomerServiceSimpleDraftsList(generics.ListAPIView):
 
     def get_queryset(self):
         return models.CustomerService.objects.filter(
-            author=self.request.user
+            team=self.request.user.team
         ).filter(draft=True).order_by("-created_at")
 
 
