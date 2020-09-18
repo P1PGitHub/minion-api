@@ -5,6 +5,7 @@ import os
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,6 +13,12 @@ from rest_framework.views import APIView
 
 from . import models
 from . import serializers
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 25
+    page_size_query_param = 'page_size'
+    max_page_size = 25
 
 
 class ReportDetail(generics.RetrieveDestroyAPIView):
@@ -58,7 +65,19 @@ class CustomerServiceList(generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class CustomerServiceDraftsList(generics.ListAPIView):
+class CustomerServiceSimpleDraftsList(generics.ListAPIView):
+
+    serializer_class = serializers.CustomerServiceSimpleSerializer
+    permissions = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        return models.CustomerService.objects.filter(
+            author=self.request.user
+        ).filter(draft=True).order_by("-created_at")
+
+
+class CustomerServiceRecentDraftsList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
     permissions = [IsAuthenticated]
@@ -66,7 +85,7 @@ class CustomerServiceDraftsList(generics.ListAPIView):
     def get_queryset(self):
         return models.CustomerService.objects.filter(
             author=self.request.user
-        ).filter(draft=True).order_by("-created_at")[:10]
+        ).filter(draft=True).order_by("-created_at")[:5]
 
 
 class CustomerServiceRecentList(generics.ListAPIView):
@@ -77,7 +96,7 @@ class CustomerServiceRecentList(generics.ListAPIView):
     def get_queryset(self):
         return models.CustomerService.objects.filter(
             author=self.request.user
-        ).filter(draft=False).order_by("-created_at")[:10]
+        ).filter(draft=False).order_by("-created_at")[:5]
 
 
 class CustomerServiceRetrieveUpdate(generics.RetrieveUpdateAPIView):
@@ -91,8 +110,11 @@ class CustomerServiceSimpleList(generics.ListAPIView):
 
     serializer_class = serializers.CustomerServiceSimpleSerializer
     permissions = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
+        print(self.request.user)
+        print(self.request.user.team)
         return models.CustomerService.objects.filter(
             team=self.request.user.team
         ).filter(
@@ -106,7 +128,7 @@ class InventoryCheckOutListCreate(generics.ListCreateAPIView):
     permissions = [IsAuthenticated]
 
     def get_queryset(self):
-        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id")).order_by("-created_at")[:10]
+        return models.InventoryCheckOut.objects.filter(report=self.kwargs.get("report_id")).order_by("-created_at")[:5]
 
     def get_serializer(self, *args, **kwargs):
         if "data" in kwargs:

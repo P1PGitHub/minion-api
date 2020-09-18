@@ -11,8 +11,10 @@ urlpatterns = [
     path("customer_service/simple/", views.CustomerServiceSimpleList.as_view(),
          name="customer-service-simple-list"
          ),
-    path("customer_service/drafts/", views.CustomerServiceDraftsList.as_view(),
+    path("customer_service/drafts/", views.CustomerServiceSimpleDraftsList.as_view(),
          name="customer-service-drafts-list"),
+    path("customer_service/drafts/recent/", views.CustomerServiceRecentDraftsList.as_view(),
+         name="customer-service-recent-drafts-list"),
     path("customer_service/recent/", views.CustomerServiceRecentList.as_view(),
          name="customer-service-drafts-list"),
     path("customer_service/<pk>/", views.CustomerServiceRetrieveUpdate.as_view(),

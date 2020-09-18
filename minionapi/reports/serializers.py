@@ -53,9 +53,18 @@ class TimeEntrySerializer(serializers.ModelSerializer):
 
 class CustomerServiceNestedSerializer(serializers.ModelSerializer):
 
-    inventory_checkouts = InventoryCheckOutSerializer(many=True)
-    time_records = TimeEntrySerializer(many=True)
-    signature = SignatureSerializer()
+    inventory_checkouts = InventoryCheckOutSerializer(
+        many=True, required=False, allow_null=True)
+    time_records = TimeEntrySerializer(
+        many=True, required=False, allow_null=True)
+    signature = SignatureSerializer(required=False, allow_null=True)
+    signatureID = serializers.PrimaryKeyRelatedField(
+        queryset=models.Signature.objects.all(),
+        source='signature',
+        write_only=True,
+        required=False,
+        allow_null=True
+    )
 
     class Meta:
         model = models.CustomerService

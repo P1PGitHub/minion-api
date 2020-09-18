@@ -84,6 +84,8 @@ class CustomerService(Report):
 
     summary = models.TextField()
 
+    followup = models.TextField(blank=True, null=True)
+
     signature = models.ForeignKey(
         Signature,
         models.SET_NULL,
