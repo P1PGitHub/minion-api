@@ -3,6 +3,7 @@ from datetime import datetime
 import os
 
 from django.conf import settings
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
@@ -62,7 +63,10 @@ class CustomerServiceList(generics.ListCreateAPIView):
         ).order_by("-created_at")
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        report = serializer.save(author=self.request.user)
+        if not report.draft:
+            send_mail(f"New CSQR for {report.company_name}", "Hello There",
+                      None, ["devin.s@priority1pos.com", "alyssa@priority1pos.com"])
 
 
 class CustomerServiceSimpleDraftsList(generics.ListAPIView):
@@ -104,6 +108,13 @@ class CustomerServiceRetrieveUpdate(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.CustomerServiceNestedSerializer
     permissions = [IsAuthenticated]
     queryset = models.CustomerService.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        report = super().update(request, *args, **kwargs)
+        print(report)
+        if not report.draft:
+            send_mail(f"New CSQR for {report.company_name}", "Hello There",
+                      None, ["devin.s@priority1pos.com", "alyssa@priority1pos.com"])
 
 
 class CustomerServiceSimpleList(generics.ListAPIView):
