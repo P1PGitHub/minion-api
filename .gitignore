@@ -218,4 +218,6 @@ dmypy.json
 pyvenv.cfg
 pip-selfcheck.json
 
+minionapi/service_accounts/
+
 # End of https://www.toptal.com/developers/gitignore/api/django,python,venvi
