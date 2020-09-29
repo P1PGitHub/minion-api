@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(),
          name='token_refresh'),
     path('accounts/', include("accounts.urls", namespace="accounts")),
+    path('logs/', include("employee_logs.urls", namespace="logs")),
     path('reports/', include("reports.urls", namespace="reports")),
     path('teams/', include("teams.urls", namespace="teams")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

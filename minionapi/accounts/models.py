@@ -69,6 +69,9 @@ class Account(AbstractBaseUser):
         blank=True,
         null=True
     )
+    report_admin = models.BooleanField(
+        default=False, verbose_name="Report Admin"
+    )
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)

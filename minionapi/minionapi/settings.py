@@ -10,8 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
-import dj_database_url
 import os
+
+import dj_database_url
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import storage
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -59,6 +64,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'accounts',
+    'employee_logs',
     'reports',
     'teams',
 ]
@@ -114,6 +120,25 @@ if not DEBUG:
     # Production Database
     db_from_env = dj_database_url.config(conn_max_age=600)
     DATABASES["default"].update(db_from_env)
+
+firebase_cred = credentials.Certificate(
+    os.path.join(BASE_DIR, "service_accounts/firebase.json"))
+if DEBUG:
+    firebase_admin.initialize_app(firebase_cred, {
+        "storageBucket": "minion-upload-dev"
+    })
+else:
+    firebase_admin.initialize_app(firebase_cred)
+
+BUCKET = storage.bucket()
+
+
+EMAIL_HOST = "gator4212.hostgator.com"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "minion@priority1pos.com"
+EMAIL_HOST_PASSWORD = "Minion#104"
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = "minion@priority1pos.com"
 
 
 # Password validation

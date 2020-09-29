@@ -2,8 +2,12 @@ import base64
 from datetime import datetime
 import os
 
+
+import dateutil.parser
+from django.apps import apps
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import slugify
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser, MultiPartParser
@@ -13,6 +17,7 @@ from rest_framework.views import APIView
 
 from . import models
 from . import serializers
+from . import utilities
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -62,7 +67,7 @@ class CustomerServiceList(generics.ListCreateAPIView):
         ).order_by("-created_at")
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        report = serializer.save(author=self.request.user)
 
 
 class CustomerServiceSimpleDraftsList(generics.ListAPIView):
@@ -104,6 +109,19 @@ class CustomerServiceRetrieveUpdate(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.CustomerServiceNestedSerializer
     permissions = [IsAuthenticated]
     queryset = models.CustomerService.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        update_response = super().update(request, *args, **kwargs)
+        report = update_response.data
+
+        if not report["draft"]:
+            spread_data = utilities.build_spread(report["id"])
+            utilities.email_spread(
+                spread_data["report"], spread_data["spread_file"],
+                [self.request.user.email]
+            )
+
+        return update_response
 
 
 class CustomerServiceSimpleList(generics.ListAPIView):
