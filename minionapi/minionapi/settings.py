@@ -128,7 +128,12 @@ if DEBUG:
         "storageBucket": "minion-upload-dev"
     })
 else:
-    firebase_admin.initialize_app(firebase_cred)
+    firebase_admin.initialize_app(
+        firebase_cred,
+        {
+            "storageBucket": "minion-upload.appspot.com"
+        }
+    )
 
 BUCKET = storage.bucket()
 
