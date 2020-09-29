@@ -231,7 +231,7 @@ def build_spread(report_id):
 
     wb.save(spread_file)
 
-    upload_spread(report.id, report.team.id, spread_file)
+    upload_spread(report.id, report.team.slug, spread_file)
 
     return {"report": report, "spread_file": spread_file}
 
