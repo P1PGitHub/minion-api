@@ -13,9 +13,11 @@ REPORT_CHOICES = [
 
 SERVICE_CHOICES = [
     ("INSTALL", "Installation"),
+    ("MENU CHANGES", "Menu Changes"),
     ("SALES", "Sales"),
     ("SERVICE", "Service Trip"),
-    ("TRAINING", "Training")
+    ("TRAINING", "Training"),
+    ("OTHER", "Other")
 ]
 
 
