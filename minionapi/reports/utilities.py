@@ -5,6 +5,7 @@ from shutil import copyfile
 from django.apps import apps
 from django.conf import settings
 from django.core.mail import EmailMessage
+from django.utils.text import slugify
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image
 from openpyxl.styles import Alignment, Color, Font
@@ -283,7 +284,10 @@ Followup:{report.followup}
         settings.EMAIL_HOST_USER,
         email_list,
     )
-    admin_message.attach_file(spread_file)
+    with open(spread_file, mode="rb") as spread_data:
+        admin_message.attach(
+            f"{slugify(report.company_name)}-{slugify(report.client_name)}.xlsx", spread_data.read()
+        )
     admin_message.send()
 
 
