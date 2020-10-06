@@ -268,7 +268,7 @@ A report has been updated by a minion admin for {report.company_name}.
 Billable: {billable_icon}
 Completed: {completed_icon}
 
-Followup:{report.followup} 
+Followup: {report.followup} 
 
 ID: {report.id}
         """
