@@ -45,7 +45,8 @@ class CustomerServiceAdmin(admin.ModelAdmin):
             spread_data = utilities.build_spread(obj.id)
             utilities.email_spread(
                 spread_data["report"], spread_data["spread_file"],
-                [request.user.email]
+                [request.user.email],
+                updated_model=True
             )
 
 
