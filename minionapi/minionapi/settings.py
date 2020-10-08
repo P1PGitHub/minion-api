@@ -43,6 +43,7 @@ AUTH_USER_MODEL = "accounts.Account"
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -86,6 +87,12 @@ from corsheaders.defaults import default_headers
 CORS_ALLOW_HEADERS = default_headers + (
     'Access-Control-Allow-Origin',
 )
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://minion-spa.herokuapp.com",
+]
+CORS_REPLACE_HTTPS_REFERER = True
+
 
 ROOT_URLCONF = 'minionapi.urls'
 
