@@ -77,8 +77,15 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://minion-spa.herokuapp.com",
     "https://minion-spa.herokuapp.com"
 ]
+
+from corsheaders.defaults import default_headers
+
+CORS_ALLOW_HEADERS = default_headers + (
+    'Access-Control-Allow-Origin',
+)
 
 ROOT_URLCONF = 'minionapi.urls'
 
