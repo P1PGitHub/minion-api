@@ -6,5 +6,7 @@ app_name = "employee_logs"
 urlpatterns = [
     path("entry/", views.WorkEntryCreate.as_view(), name="entry-create"),
     path("entry/<date>/", views.WorkEntryListCreate.as_view(),
-         name="entry-list-create")
+         name="entry-list-create"
+    ),
+    path("entry/id/<pk>/", views.WorkEntryRetrieveUpdateDestroy.as_view(), name="entry-retrieve-update-destroy")
 ]

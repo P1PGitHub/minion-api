@@ -26,3 +26,9 @@ class WorkEntryListCreate(generics.ListCreateAPIView):
 class WorkEntryCreate(generics.CreateAPIView):
 
     serializer_class = serializers.WorkEntrySerializer
+
+
+class WorkEntryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+
+    serializer_class = serializers.WorkEntrySerializer
+    queryset = models.WorkEntry.objects.all()
