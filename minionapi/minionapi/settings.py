@@ -88,11 +88,7 @@ CORS_ALLOW_HEADERS = default_headers + (
     'Access-Control-Allow-Origin',
 )
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://minion-spa.herokuapp.com",
-]
-CORS_REPLACE_HTTPS_REFERER = True
-
+CORS_ALLOW_CREDENTIALS = False
 
 ROOT_URLCONF = 'minionapi.urls'
 
