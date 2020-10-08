@@ -9,7 +9,7 @@ Django==2.2.15
 django-cors-headers==3.4.0
 django-reset-migrations==0.4.0
 djangorestframework==3.11.1
-djangorestframework-simplejwt==4.4.0
+djangorestframework-simplejwt==4.3.0
 et-xmlfile==1.0.1
 firebase-admin==4.4.0
 google-api-core==1.22.2

@@ -21,3 +21,8 @@ class WorkEntryListCreate(generics.ListCreateAPIView):
             return serializers.WorkEntrySimpleSerializer
         else:
             return serializers.WorkEntrySerializer
+
+
+class WorkEntryCreate(generics.CreateAPIView):
+
+    serializer_class = serializers.WorkEntrySerializer
