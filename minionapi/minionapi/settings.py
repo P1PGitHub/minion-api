@@ -88,7 +88,7 @@ CORS_ALLOW_HEADERS = default_headers + (
     'Access-Control-Allow-Origin',
 )
 
-CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'minionapi.urls'
 
