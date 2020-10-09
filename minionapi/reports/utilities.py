@@ -228,7 +228,9 @@ def build_spread(report_id):
 
     row += 1
 
-    row = write_signature(report, ws, row)
+    print(report.signature)
+    if report.signature:
+        row = write_signature(report, ws, row)
 
     wb.save(spread_file)
 
@@ -298,10 +300,11 @@ ID: {report.id}
     for user in report_admins:
         email_list.append(user.email)
     for email in additional_recipients:
-        if not email in email_list:
-            email_list.append(email)
-    if not report.author.email in email_list:
         email_list.append(email)
+    email_list.append(report.author.email)
+    email_list.append(report.last_edited_by.email)
+    email_list = list(dict.fromkeys(email_list))
+    print(email_list)
     admin_message = EmailMessage(
         subject,
         message,
@@ -310,7 +313,7 @@ ID: {report.id}
     )
     with open(spread_file, mode="rb") as spread_data:
         admin_message.attach(
-            f"{slugify(report.company_name)}-{slugify(report.client_name)}.xlsx", spread_data.read()
+            f"{slugify(report.company_name)}_{slugify(report.client_name)}_{report.id}.xlsx", spread_data.read()
         )
     admin_message.send()
 
