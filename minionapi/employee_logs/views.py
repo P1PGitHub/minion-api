@@ -7,7 +7,7 @@ from . import models
 from . import serializers
 
 
-class WorkEntryListCreate(generics.ListCreateAPIView):
+class WorkEntryList(generics.ListAPIView):
 
     serializer_class = serializers.WorkEntrySerializer
 
