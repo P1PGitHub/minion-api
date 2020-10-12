@@ -29,7 +29,7 @@ class WorkEntryRangeList(generics.ListAPIView):
         request_end = datetime.strptime(self.kwargs.get(
             "end"), "%Y%m%d%H%M") + timedelta(days=1)
 
-        return models.WorkEntry.objects.filter(start__gte=request_date).filter(end__lte=request_end).filter(user=self.request.user).order_by("-start")
+        return models.WorkEntry.objects.filter(start__gte=request_start).filter(end__lte=request_end).filter(user=self.request.user).order_by("-start")
 
 
 class WorkEntryCreate(generics.CreateAPIView):
