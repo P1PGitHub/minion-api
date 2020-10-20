@@ -2,7 +2,10 @@ import random
 
 from django.db import models
 from django.utils.text import slugify
+import pytz
 import uuid
+
+TIMEZONE_CHOICES = zip(pytz.all_timezones, pytz.all_timezones)
 
 
 class Team(models.Model):
@@ -29,6 +32,10 @@ class Team(models.Model):
 
     cw_company = models.CharField(
         max_length=255, unique=True, blank=True, null=True, verbose_name="CW company")
+
+    timezone = models.CharField(
+        max_length=255, default='UTC', choices=TIMEZONE_CHOICES
+    )
 
     def save(self, *args, **kwargs):
         if self.name:
