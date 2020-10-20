@@ -1,3 +1,4 @@
+from django.apps import apps
 from rest_framework.serializers import ModelSerializer
 
 from . import models
