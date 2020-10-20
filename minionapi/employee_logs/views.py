@@ -50,7 +50,7 @@ class WorkEntryTeamList(generics.ListAPIView):
     serializer_class = account_serializers.AccountSimpleSerializer
 
     def get_queryset(self):
-        return apps.get_model("accounts", "account").objects.filter(team=self.request.user.team)
+        return apps.get_model("accounts", "account").objects.filter(team=self.request.user.team).order_by("last_name")
 
     def list(self, request, *args, **kwargs):
         res = super().list(request, *args, **kwargs)
@@ -65,7 +65,7 @@ class WorkEntryTeamList(generics.ListAPIView):
             user_obj = apps.get_model("accounts", "account").objects.get(
                 pk=user["id"]
             )
-            res.data[index].update({"work_entries": serializers.WorkEntrySimpleSerializer(
+            res.data[index].update({"work_entries": serializers.WorkEntrySerializer(
                 models.WorkEntry.objects.filter(
                     user=user_obj.id
                 ).filter(
