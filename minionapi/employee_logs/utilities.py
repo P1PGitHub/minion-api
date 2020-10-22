@@ -266,6 +266,7 @@ def upload_spread(user, start, end, spread_file):
     blob = settings.BUCKET.blob(ref)
     blob.upload_from_filename(spread_file)
     return {
+        "name": f"{start_string}-{end_string}-{user.last_name}-{user.first_name}.xlsx",
         "ref": ref,
         "url": blob.public_url
     }
@@ -281,6 +282,7 @@ def upload_team_spread(team, start, end, spread_file):
     blob = settings.BUCKET.blob(ref)
     blob.upload_from_filename(spread_file)
     return {
+        "name": f"{start_string}-{end_string}.xlsx",
         "ref": ref,
         "url": blob.public_url
     }
