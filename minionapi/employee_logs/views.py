@@ -3,8 +3,11 @@ from datetime import datetime, timedelta, timezone
 from django.apps import apps
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import models
+from . import utilities
 from . import serializers
 from accounts import serializers as account_serializers
 
@@ -32,6 +35,38 @@ class WorkEntryRangeList(generics.ListAPIView):
             "end"), "%Y%m%d%H%M").replace(tzinfo=timezone.utc) + timedelta(days=1)
 
         return models.WorkEntry.objects.filter(start__gte=request_start).filter(end__lte=request_end).filter(user=self.request.user).order_by("-start")
+
+
+class WorkEntryRangeDownload(APIView):
+
+    def get(self, *args, **kwargs):
+        start_datetime = datetime.strptime(self.kwargs.get(
+            "start"
+        ), "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+        end_datetime = datetime.strptime(self.kwargs.get(
+            "end"), "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+        data = utilities.build_user_activity_spread(
+            start_datetime,
+            end_datetime,
+            self.request.user
+        )
+        return Response(status="200", data=data)
+
+
+class WorkEntryTeamRangeDownload(APIView):
+
+    def get(self, *args, **kwargs):
+        start_datetime = datetime.strptime(self.kwargs.get(
+            "start"
+        ), "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+        end_datetime = datetime.strptime(self.kwargs.get(
+            "end"), "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+        data = utilities.build_team_activity_spread(
+            start_datetime,
+            end_datetime,
+            self.request.user.team
+        )
+        return Response(status="200", data=data)
 
 
 class WorkEntryCreate(generics.CreateAPIView):

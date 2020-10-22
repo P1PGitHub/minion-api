@@ -194,7 +194,6 @@ def write_inventory(report, ws, row):
 
 def build_spread(report_id):
     report = models.CustomerService.objects.get(id=report_id)
-    user_model = apps.get_model("accounts", "Account")
     spread_file = setup_file_structure(report.id)
 
     wb = load_workbook(filename=spread_file)
