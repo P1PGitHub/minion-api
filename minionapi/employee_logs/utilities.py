@@ -208,13 +208,11 @@ def write_time_entries(ws, time_entries):
 
 
 def write_totals_header(ws, user, quantities):
-    print(datetime.now(tz=pytz.timezone("UTC")).strftime("%X %Z"))
     now_tz = datetime.now(
         tz=pytz.timezone("UTC")
     ).astimezone(
         pytz.timezone(user.team.timezone)
     )
-    print(now_tz.strftime("%X %Z"))
 
     ws["F7"] = now_tz.strftime("%x %X %Z")
     ws["G8"] = round(quantities["total"], 2)
@@ -237,22 +235,28 @@ def build_sheet(spread_file, user, start, end):
 
 
 def build_user_activity_spread(start, end, user):
-    spread_file = setup_file_structure(start, end, user)
-    wb = build_sheet(spread_file, user, start, end)
-    wb.remove_sheet(wb["Sheet1"])
-    wb.save(spread_file)
+    try:
+        spread_file = setup_file_structure(start, end, user)
+        wb = build_sheet(spread_file, user, start, end)
+        wb.remove_sheet(wb["Sheet1"])
+        wb.save(spread_file)
+    except Exception as e:
+        print(e)
     return upload_spread(user, start, end, spread_file)
 
 
 def build_team_activity_spread(start, end, team):
-    user_model = apps.get_model("accounts", "account")
-    members = user_model.objects.filter(
-        team=team).order_by("last_name", "first_name")
-    spread_file = setup_team_file_structure(start, end, team)
-    for member in members:
-        wb = build_sheet(spread_file, member, start, end)
-    wb.remove_sheet(wb["Sheet1"])
-    wb.save(spread_file)
+    try:
+        user_model = apps.get_model("accounts", "account")
+        members = user_model.objects.filter(
+            team=team).order_by("last_name", "first_name")
+        spread_file = setup_team_file_structure(start, end, team)
+        for member in members:
+            wb = build_sheet(spread_file, member, start, end)
+        wb.remove_sheet(wb["Sheet1"])
+        wb.save(spread_file)
+    except Exception as e:
+        print(e)
     return upload_team_spread(team, start, end, spread_file)
 
 
