@@ -19,6 +19,9 @@ class Team(models.Model):
         max_length=255
     )
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+    logo_ref = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Logo Ref"
+    )
     address1 = models.CharField(
         verbose_name="street address 1", max_length=255)
     address2 = models.CharField(
@@ -38,26 +41,29 @@ class Team(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if self.name:
-            slug_candidate = slugify(self.name)
-            valid_slug = False
-            for attempt in range(0, 10):
-                if not Team.objects.filter(slug=slug_candidate).exists():
-                    valid_slug = True
-                    break
-                else:
-                    rand_hex = str(hex(random.randint(0, 65535)))[2:]
-                    slug_candidate = slugify(
-                        self.name, allow_unicode=True
-                    ) + f"-{rand_hex}"
-            if not valid_slug:
-                raise ValidationError(
-                    "Cannot create a valid slug for this team."
-                )
-            self.slug = slug_candidate
-            super(Team, self).save(*args, **kwargs)
+        if self.pk is None:
+            if self.name:
+                slug_candidate = slugify(self.name)
+                valid_slug = False
+                for attempt in range(0, 10):
+                    if not Team.objects.filter(slug=slug_candidate).exists():
+                        valid_slug = True
+                        break
+                    else:
+                        rand_hex = str(hex(random.randint(0, 65535)))[2:]
+                        slug_candidate = slugify(
+                            self.name, allow_unicode=True
+                        ) + f"-{rand_hex}"
+                if not valid_slug:
+                    raise ValidationError(
+                        "Cannot create a valid slug for this team."
+                    )
+                self.slug = slug_candidate
+                super(Team, self).save(*args, **kwargs)
+            else:
+                raise ValidationError("A company name is required.")
         else:
-            raise ValidationError("A company name is required.")
+            super(Team, self).save(*args, **kwargs)
 
     def get_full_address(self):
         if self.address2:
