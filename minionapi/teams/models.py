@@ -38,7 +38,7 @@ class Team(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        if self.name:
+        if self.name and self.pk is None:
             slug_candidate = slugify(self.name)
             valid_slug = False
             for attempt in range(0, 10):
