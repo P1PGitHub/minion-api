@@ -229,34 +229,29 @@ def build_sheet(spread_file, user, start, end):
         start__gte=start).filter(end__lte=end + timedelta(days=1)).filter(user=user).order_by("start")
     quantities = write_time_entries(ws, time_entries)
     write_totals_header(ws, user, quantities)
-    write_logo(ws, user.team)
+    if user.team.logo_ref:
+        write_logo(ws, user.team)
     wb.save(spread_file)
     return wb
 
 
 def build_user_activity_spread(start, end, user):
-    try:
-        spread_file = setup_file_structure(start, end, user)
-        wb = build_sheet(spread_file, user, start, end)
-        wb.remove_sheet(wb["Sheet1"])
-        wb.save(spread_file)
-    except Exception as e:
-        print(e)
+    spread_file = setup_file_structure(start, end, user)
+    wb = build_sheet(spread_file, user, start, end)
+    wb.remove_sheet(wb["Sheet1"])
+    wb.save(spread_file)
     return upload_spread(user, start, end, spread_file)
 
 
 def build_team_activity_spread(start, end, team):
-    try:
-        user_model = apps.get_model("accounts", "account")
-        members = user_model.objects.filter(
-            team=team).order_by("last_name", "first_name")
-        spread_file = setup_team_file_structure(start, end, team)
-        for member in members:
-            wb = build_sheet(spread_file, member, start, end)
-        wb.remove_sheet(wb["Sheet1"])
-        wb.save(spread_file)
-    except Exception as e:
-        print(e)
+    user_model = apps.get_model("accounts", "account")
+    members = user_model.objects.filter(
+        team=team).order_by("last_name", "first_name")
+    spread_file = setup_team_file_structure(start, end, team)
+    for member in members:
+        wb = build_sheet(spread_file, member, start, end)
+    wb.remove_sheet(wb["Sheet1"])
+    wb.save(spread_file)
     return upload_team_spread(team, start, end, spread_file)
 
 
