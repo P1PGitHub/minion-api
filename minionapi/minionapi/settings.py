@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+from corsheaders.defaults import default_headers
 import os
 
 import dj_database_url
@@ -28,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'qba5%6mo#f6x!%$8kzy_cl8^b#u&$zxg83vkexrq)&lf9i)2f+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -82,7 +83,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://minion-spa.herokuapp.com"
 ]
 
-from corsheaders.defaults import default_headers
 
 CORS_ALLOW_HEADERS = default_headers + (
     'Access-Control-Allow-Origin',
