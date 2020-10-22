@@ -208,13 +208,11 @@ def write_time_entries(ws, time_entries):
 
 
 def write_totals_header(ws, user, quantities):
-    print(datetime.now(tz=pytz.timezone("UTC")).strftime("%X %Z"))
     now_tz = datetime.now(
         tz=pytz.timezone("UTC")
     ).astimezone(
         pytz.timezone(user.team.timezone)
     )
-    print(now_tz.strftime("%X %Z"))
 
     ws["F7"] = now_tz.strftime("%x %X %Z")
     ws["G8"] = round(quantities["total"], 2)
@@ -231,7 +229,8 @@ def build_sheet(spread_file, user, start, end):
         start__gte=start).filter(end__lte=end + timedelta(days=1)).filter(user=user).order_by("start")
     quantities = write_time_entries(ws, time_entries)
     write_totals_header(ws, user, quantities)
-    write_logo(ws, user.team)
+    if user.team.logo_ref:
+        write_logo(ws, user.team)
     wb.save(spread_file)
     return wb
 
