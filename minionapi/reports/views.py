@@ -34,6 +34,17 @@ class ReportDetail(generics.RetrieveDestroyAPIView):
     def get_object(self):
         return get_object_or_404(models.Report, id=self.kwargs.get("report_id"))
 
+    def delete(self, *args, **kwargs):
+        report = self.get_object()
+        print(report.draft)
+        print(report.author.id)
+        print(self.request.user.id)
+        print(self.request.user.report_admin)
+        if (report.draft == True and (report.author == self.request.user or self.request.user.report_admin)):
+            return super().delete(*args, **kwargs)
+        else:
+            return Response(status=403)
+
 
 class ReportList(generics.ListAPIView):
 
