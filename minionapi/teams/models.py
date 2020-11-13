@@ -40,12 +40,16 @@ class Team(models.Model):
         max_length=255, default='UTC', choices=TIMEZONE_CHOICES
     )
 
+    stale_report_age = models.PositiveSmallIntegerField(
+        default=7
+    )
+
     def save(self, *args, **kwargs):
         if self.pk is None:
             if self.name:
                 slug_candidate = slugify(self.name)
                 valid_slug = False
-                for attempt in range(0, 10):
+                for _ in range(0, 10):
                     if not Team.objects.filter(slug=slug_candidate).exists():
                         valid_slug = True
                         break

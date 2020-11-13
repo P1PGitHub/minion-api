@@ -22,6 +22,7 @@ urlpatterns = [
     path("sign/", views.SignatureCreate.as_view(), name="signature-create"),
     path("sign/<signature_id>/", views.SignatureRetreiveDelete.as_view(),
          name="signature-upload"),
+    path("stale/", views.StaleReportList.as_view(), name="stale-reports"),
     path("<report_id>/",
          views.ReportDetail.as_view(), name="report-detail"
          ),
@@ -38,5 +39,4 @@ urlpatterns = [
          ),
     path("<report_id>/time_entry/clear/",
          views.TimeEntryClear.as_view(), name="time-entry-clear"),
-
 ]
