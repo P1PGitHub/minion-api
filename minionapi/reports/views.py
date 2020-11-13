@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 
@@ -65,6 +65,13 @@ class ReportPublish(APIView):
         return Response(status=200, data=serializers.ReportSerializer(report).data)
 
 
+class StaleReportList(generics.ListAPIView):
+
+    def get_queryset(self):
+        stale_date = datetime.now() - timedelta(days=self.request.user.team.stale_report_age)
+        return models.Report.objects.filter(author=self.request.user).filter(created_at__lte=stale_date)
+
+
 class CustomerServiceList(generics.ListCreateAPIView):
 
     serializer_class = serializers.CustomerServiceSerializer
@@ -79,6 +86,7 @@ class CustomerServiceList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         report = serializer.save(author=self.request.user)
+        return report
 
 
 class CustomerServiceSimpleDraftsList(generics.ListAPIView):
