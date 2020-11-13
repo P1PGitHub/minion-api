@@ -67,9 +67,12 @@ class ReportPublish(APIView):
 
 class StaleReportList(generics.ListAPIView):
 
+    serializer_class = serializers.ReportSerializer
+    permissions = [IsAuthenticated]
+
     def get_queryset(self):
         stale_date = datetime.now() - timedelta(days=self.request.user.team.stale_report_age)
-        return models.Report.objects.filter(author=self.request.user).filter(created_at__lte=stale_date)
+        return models.Report.objects.filter(author=self.request.user, created_at__lte=stale_date, draft=True)
 
 
 class CustomerServiceList(generics.ListCreateAPIView):
