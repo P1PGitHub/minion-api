@@ -16,9 +16,9 @@ from . import models
 
 def setup_file_structure(id):
     template_spread = os.path.join(
-        settings.BASE_DIR, 'staticfiles/xlsx/csqr.xlsx'
+        settings.BASE_DIR, 'staticfiles', 'xlsx', 'csqr.xlsx'
     )
-    report_dir = os.path.join(settings.MEDIA_ROOT, f"reports/csqr/")
+    report_dir = os.path.join(settings.MEDIA_ROOT, "reports", "csqr")
 
     if not os.path.exists(report_dir):
         os.makedirs(report_dir)
@@ -120,7 +120,9 @@ def write_signature(report, ws, row):
 
     row += 3
 
-    ws[f"A{row}"] = datetime.now().strftime("%a %B %-d, %Y %-I:%M %p")
+    ws[f"A{row}"] = datetime.now().strftime(
+        "%a %B %-d, %Y %-I:%M %p" if not os.name == 'nt' else "%a %B %#d, %Y %#I:%M %p"
+    )
 
     return row
 
@@ -269,8 +271,10 @@ A report has been updated by a minion admin for {report.company_name}.
 Billable: {billable_icon}
 Completed: {completed_icon}
 
-Followup: {report.followup} 
+Followup: {report.followup}
 
+Author: {report.author.full_name}
+Editor: {report.last_edited_by.full_name if report.last_edited_by else 'None'}
 ID: {report.id}
         """
         subject = f"CSQR for {report.company_name} has been updated."
@@ -291,6 +295,8 @@ Completed: {completed_icon}
 
 Followup: {report.followup} 
 
+Author: {report.author.full_name}
+Editor: {report.last_edited_by.full_name if report.last_edited_by else 'None'}
 ID: {report.id}
         """
         subject = f"New CSQR for {report.company_name}"
@@ -301,7 +307,8 @@ ID: {report.id}
     for email in additional_recipients:
         email_list.append(email)
     email_list.append(report.author.email)
-    email_list.append(report.last_edited_by.email)
+    if report.last_edited_by:
+        email_list.append(report.last_edited_by.email)
     email_list = list(dict.fromkeys(email_list))
     print(email_list)
     admin_message = EmailMessage(
