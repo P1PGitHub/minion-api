@@ -185,7 +185,7 @@ class CustomerServiceQuery(APIView):
                 draft=False
             )
 
-        return Response(status=200, data=serializers.CustomerServiceSimpleSerializer(customer_service_reports, many=True).data)
+        return Response(status=200, data=serializers.CustomerServiceSimpleSerializer(customer_service_reports.order_by("-created_at"), many=True).data)
 
 
 class InventoryCheckOutListCreate(generics.ListCreateAPIView):
