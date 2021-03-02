@@ -20,7 +20,7 @@ class CustomerServiceSimpleSerializer(serializers.ModelSerializer):
         model = models.CustomerService
         fields = ["client_name", "company_name", "author",
                   "report_type", "id", "billable", "description",
-                  "created_at"]
+                  "created_at", "draft"]
 
 
 class InventoryCheckOutSerializer(serializers.ModelSerializer):
