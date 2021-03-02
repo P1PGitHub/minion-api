@@ -1,5 +1,6 @@
 import base64
 from datetime import datetime, timedelta
+import json
 import os
 
 
@@ -160,6 +161,31 @@ class CustomerServiceSimpleList(generics.ListAPIView):
         ).filter(
             draft=False
         ).order_by("-created_at")
+
+
+class CustomerServiceQuery(APIView):
+
+    permissions = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        body_data = json.loads(request.body)
+        print(body_data)
+        customer_service_reports = models.CustomerService.objects.filter(
+            created_at__gte=body_data['dates']['start'], team=self.request.user.team) | models.CustomerService.objects.filter(updated_at__gte=body_data['dates']['start'], team=self.request.user.team)
+        if body_data['author']:
+            customer_service_reports = customer_service_reports.filter(
+                author=body_data['author']
+            )
+        if body_data["client"]:
+            customer_service_reports = customer_service_reports.filter(
+                company_id=body_data['client']
+            )
+        if not body_data["drafts"]:
+            customer_service_reports = customer_service_reports.filter(
+                draft=False
+            )
+
+        return Response(status=200, data=serializers.CustomerServiceSimpleSerializer(customer_service_reports, many=True).data)
 
 
 class InventoryCheckOutListCreate(generics.ListCreateAPIView):
