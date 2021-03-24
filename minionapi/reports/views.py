@@ -37,10 +37,6 @@ class ReportDetail(generics.RetrieveDestroyAPIView):
 
     def delete(self, *args, **kwargs):
         report = self.get_object()
-        print(report.draft)
-        print(report.author.id)
-        print(self.request.user.id)
-        print(self.request.user.report_admin)
         if (report.draft == True and (report.author == self.request.user or self.request.user.report_admin)):
             return super().delete(*args, **kwargs)
         else:
@@ -59,7 +55,6 @@ class ReportPublish(APIView):
     permissions = [IsAuthenticated]
 
     def put(self, request, *args, **kwargs):
-        print(kwargs)
         report = get_object_or_404(models.Report, id=kwargs["report_id"])
         report.draft = False
         report.save()
@@ -154,8 +149,6 @@ class CustomerServiceSimpleList(generics.ListAPIView):
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
-        print(self.request.user)
-        print(self.request.user.team)
         return models.CustomerService.objects.filter(
             team=self.request.user.team
         ).filter(
@@ -169,7 +162,6 @@ class CustomerServiceQuery(APIView):
 
     def post(self, request, *args, **kwargs):
         body_data = json.loads(request.body)
-        print(body_data)
         customer_service_reports = models.CustomerService.objects.filter(
             created_at__gte=body_data['dates']['start'], team=self.request.user.team) | models.CustomerService.objects.filter(updated_at__gte=body_data['dates']['start'], team=self.request.user.team)
         if body_data['author']:
@@ -200,14 +192,12 @@ class InventoryCheckOutListCreate(generics.ListCreateAPIView):
         if "data" in kwargs:
             data = kwargs["data"]
 
-            # check if many is required
             if isinstance(data, list):
                 kwargs["many"] = True
 
         return super(InventoryCheckOutListCreate, self).get_serializer(*args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
         for inventory in request.data:
             inventory["report"] = kwargs["report_id"]
         return super(InventoryCheckOutListCreate, self).create(request)
@@ -257,7 +247,6 @@ class TimeEntryListCreate(generics.ListCreateAPIView):
         return super(TimeEntryListCreate, self).get_serializer(*args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
         if isinstance(request.data, list):
             for inventory in request.data:
                 inventory["report"] = kwargs["report_id"]
