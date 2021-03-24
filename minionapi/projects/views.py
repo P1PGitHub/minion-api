@@ -122,7 +122,7 @@ class UserTaskList(generics.ListAPIView):
         task_id_list = []
         for mem in task_members:
             task_id_list.append(mem.task.pk)
-        return models.Task.objects.filter(pk__in=task_id_list)
+        return models.Task.objects.filter(pk__in=task_id_list, completed=False, project__active=True)
 
 
 class ProjectClientListCreate(generics.ListCreateAPIView):
