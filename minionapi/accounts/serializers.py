@@ -39,3 +39,14 @@ class AccountSimpleSerializer(serializers.ModelSerializer):
             "last_name",
             "active"
         ]
+
+
+class AccountNameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Account
+        fields = [
+            "id",
+            "last_name",
+            "first_name"
+        ]

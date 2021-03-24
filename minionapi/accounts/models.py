@@ -105,9 +105,12 @@ class Account(AbstractBaseUser):
         else:
             return self.email
 
-    def get_short_name(self):
+    @property
+    def short_name(self):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name[0]}"
+        else:
+            return f"{self.first_name}"
 
     def __str__(self):
         return self.email
