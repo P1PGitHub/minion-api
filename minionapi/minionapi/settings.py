@@ -78,6 +78,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'].append(
+        'rest_framework.authentication.SessionAuthentication')
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://minion-spa.herokuapp.com",
