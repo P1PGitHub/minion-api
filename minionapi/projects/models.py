@@ -149,6 +149,8 @@ class Task(models.Model):
         "accounts.Account", on_delete=models.SET_NULL, blank=True, null=True)
     completed = models.BooleanField(default=False)
     completed_at = models.DateTimeField(blank=True, null=True)
+    completed_by = models.ForeignKey(
+        "accounts.Account", on_delete=models.SET_NULL, blank=True, null=True, related_name="completed_tasks", related_query_name="completed_task")
     index = models.SmallIntegerField(default=-1)
 
     def __str__(self):
@@ -173,11 +175,25 @@ class Task(models.Model):
         self.completed_at = timezone.now()
         self.completed_by = user
         Update.objects.create(
-            title=f"{self.completed_by.short_name} has completed Task '{self.title}'",
+            title=f"{user.short_name} has completed Task '{self.title}'",
+            project=self.project,
             created_by=user,
             status="POSITIVE"
         )
         self.save()
+
+    def uncomplete(self, user):
+        if self.completed:
+            Update.objects.create(
+                title=f"{user.short_name} has marked Task '{self.title}' as incomplete",
+                project=self.project,
+                created_by=user,
+                status="INFO"
+            )
+            self.completed = False
+            self.completed_at = None
+            self.completed_by = None
+            self.save()
 
     class Meta:
         ordering = ["index", "-created_at"]

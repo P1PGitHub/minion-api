@@ -182,6 +182,21 @@ class UpdateNestedSerializer(serializers.ModelSerializer):
         ]
 
 
+class UpdateProjectNestedSerializer(serializers.ModelSerializer):
+
+    created_by = account_serializers.AccountNameSerializer()
+    project = ProjectSimpleSerializer()
+
+    class Meta:
+        model = models.Update
+        fields = "__all__"
+        read_only_fields = [
+            "created_by",
+            "created_at",
+            "project"
+        ]
+
+
 class ProjectNestedSerializer(serializers.ModelSerializer):
 
     clients = ClientSerializer(many=True, read_only=True)
