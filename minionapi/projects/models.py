@@ -39,6 +39,14 @@ class Project(models.Model):
     def __str__(self):
         return self.summary
 
+    @property
+    def total_tasks(self):
+        return len(Task.objects.filter(project=self))
+
+    @property
+    def completed_tasks(self):
+        return len(Task.objects.filter(project=self, completed=True))
+
     def save(self, *args, **kwargs):
         new_instance = not bool(self.pk)
         self.active = not self.status in ["COMPLETED", "CANCELLED"]

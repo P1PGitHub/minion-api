@@ -17,13 +17,22 @@ class ProjectSimpleSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
 
+    completed_tasks = serializers.SerializerMethodField()
+    total_tasks = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Project
         fields = "__all__"
         read_only_fields = [
             "created_at",
-            "created_by"
+            "created_by",
         ]
+
+    def get_completed_tasks(self, obj):
+        return obj.tasks.filter(completed=True).count()
+
+    def get_total_tasks(self, obj):
+        return obj.tasks.count()
 
 
 class ClientSerializer(serializers.ModelSerializer):
@@ -204,7 +213,16 @@ class ProjectNestedSerializer(serializers.ModelSerializer):
     updates = UpdateNestedSerializer(many=True, read_only=True)
     tasks = TaskNestedSerializer(many=True, read_only=True)
 
+    completed_tasks = serializers.SerializerMethodField()
+    total_tasks = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Project
         fields = "__all__"
         read_only_fields = ["created_at", "created_by"]
+
+    def get_completed_tasks(self, obj):
+        return obj.tasks.filter(completed=True).count()
+
+    def get_total_tasks(self, obj):
+        return obj.tasks.count()
