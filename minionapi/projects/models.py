@@ -75,7 +75,7 @@ class Client(models.Model):
         "accounts.Account", on_delete=models.SET_NULL, null=True)
 
     class Meta:
-        ordering = ["primary", "client_name"]
+        ordering = ["-primary", "client_name"]
         unique_together = ["client_id", "project"]
 
     def __str__(self):

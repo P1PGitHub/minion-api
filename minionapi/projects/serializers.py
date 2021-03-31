@@ -11,7 +11,8 @@ class ProjectSimpleSerializer(serializers.ModelSerializer):
         fields = [
             "summary",
             "due_date",
-            "status"
+            "status",
+            "id"
         ]
 
 
@@ -95,7 +96,7 @@ class UpdateSimpleSerializer(serializers.ModelSerializer):
         model = models.Update
         fields = [
             "project",
-            "title"
+            "title",
         ]
 
 
