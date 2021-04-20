@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 from corsheaders.defaults import default_headers
+from datetime import timedelta
 import os
+import socket
 
 import dj_database_url
 import firebase_admin
@@ -31,13 +33,13 @@ SECRET_KEY = 'qba5%6mo#f6x!%$8kzy_cl8^b#u&$zxg83vkexrq)&lf9i)2f+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# DEBUG will add the devices current ip address to this list
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "minion-api.herokuapp.com",
     "minion-api-dev.herokuapp.com"
 ]
-
 
 # Application definition
 AUTH_USER_MODEL = "accounts.Account"
@@ -69,13 +71,20 @@ INSTALLED_APPS = [
     'employee_logs',
     'reports',
     'teams',
-    'projects'
+    'projects',
+    'notifications'
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True
 }
 
 if DEBUG:
@@ -87,6 +96,18 @@ CORS_ALLOWED_ORIGINS = [
     "http://minion-spa.herokuapp.com",
     "https://minion-spa.herokuapp.com"
 ]
+
+
+if DEBUG:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip_address = s.getsockname()[0]
+    s.close()
+    ALLOWED_HOSTS.insert(0, ip_address)
+    CORS_ALLOWED_ORIGINS.append(f"http://{ip_address}:3000")
+    print(ALLOWED_HOSTS)
+    print(ip_address)
+    print(CORS_ALLOWED_ORIGINS)
 
 
 CORS_ALLOW_HEADERS = default_headers + (

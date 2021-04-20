@@ -34,6 +34,7 @@ urlpatterns = [
          name='token_refresh'),
     path('accounts/', include("accounts.urls", namespace="accounts")),
     path('logs/', include("employee_logs.urls", namespace="logs")),
+    path('notifications/', include("notifications.urls", namespace="notifications")),
     path('projects/', include("projects.urls", namespace="projects")),
     path('reports/', include("reports.urls", namespace="reports")),
     path('teams/', include("teams.urls", namespace="teams")),
