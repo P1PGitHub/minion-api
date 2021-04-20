@@ -95,7 +95,14 @@ class TaskMemberListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         task = get_object_or_404(models.Task, pk=self.kwargs.get("pk"))
-        serializer.save(task=task)
+        return serializer.save(task=task)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        instance_serializer = serializers.TaskMemberNestedSerializer(instance)
+        return Response(instance_serializer.data)
 
 
 class TaskMemberRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
@@ -130,7 +137,6 @@ class TaskComplete(APIView):
     permissions = [IsAuthenticated]
 
     def put(self, request, *args, **kwargs):
-        print(self.request.user)
         task = get_object_or_404(models.Task, pk=kwargs["pk"])
         if not task.completed:
             task.complete(self.request.user)
@@ -272,7 +278,7 @@ class ProjectMemberListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         project = get_object_or_404(
             models.Project, pk=self.kwargs.get("project_id"))
-        serializer.save(project=project)
+        return serializer.save(project=project)
 
 
 class ProjectUpdateListCreate(generics.ListCreateAPIView):
@@ -311,7 +317,7 @@ class ProjectTaskListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         project = get_object_or_404(
             models.Project, pk=self.kwargs.get("project_id"))
-        serializer.save(project=project, created_by=self.request.user)
+        return serializer.save(project=project, created_by=self.request.user)
 
 
 class ProjectRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from notifications import models as notif_models
+
 
 STATUS_CHOICES = (
     ("PROPOSED", 'Proposed'),
@@ -50,6 +52,33 @@ class Project(models.Model):
     def save(self, *args, **kwargs):
         new_instance = not bool(self.pk)
         self.active = not self.status in ["COMPLETED", "CANCELLED"]
+        if not new_instance:
+            old_object = Project.objects.get(pk=self.pk)
+            if not old_object.summary == self.summary:
+                Update.objects.create(
+                    project=self, title="Project Summary has been updated.",
+                    message=f"Old Summary: {old_object.summary}"
+                )
+            if not old_object.description == self.description:
+                Update.objects.create(
+                    project=self, title="Project Description has been updated",
+                    message=f"Old Description\n\n{old_object.description}"
+                )
+            if not old_object.status == self.status:
+                Update.objects.create(
+                    project=self,
+                    title=f"Project status has been updated",
+                    message=f"{old_object.status} → {self.status}"
+                )
+                members = self.members.all()
+                for member in members:
+                    notif_models.Notification.objects.create(
+                        user=member.account,
+                        title=f"[{self.summary}] Project status has been updated.",
+                        message=f"{old_object.status} → {self.status}",
+                        project=self
+                    )
+
         super(Project, self).save(*args, **kwargs)
         if new_instance:
             Update.objects.create(
@@ -81,13 +110,20 @@ class Client(models.Model):
     def __str__(self):
         return f"{self.client_name} - {self.project.summary}"
 
+    def delete(self, *args, **kwargs):
+        Update.objects.create(
+            project=self.project,
+            title=f"Client '{self.client_name}' has been removed from this project."
+        )
+        super(Client, self).delete(*args, **kwargs)
+
     def save(self, *args, **kwargs):
         new_instance = not bool(self.pk)
         super(Client, self).save(*args, **kwargs)
         if new_instance:
             Update.objects.create(
                 project=self.project,
-                title=f"Client {self.client_name} has been added to this project.",
+                title=f"Client '{self.client_name}' has been added to this project.",
                 created_by=self.created_by)
         if self.primary:
             other_clients = Client.objects.filter(
@@ -119,6 +155,12 @@ class Member(models.Model):
         if new_instance:
             Update.objects.create(
                 project=self.project, title=f"{self.account.short_name} has joined this project.")
+            notif_models.Notification.objects.create(
+                user=self.account,
+                title=f"[{self.project.summary}] You have been assigned to this project.",
+                message=self.message,
+                project=self.project
+            )
 
 
 class Update(models.Model):
@@ -223,3 +265,27 @@ class TaskMember(models.Model):
 
     def __str__(self):
         return f"{self.account.full_name} - {self.task.title}"
+
+    def save(self, *args, **kwargs):
+        new_instance = not bool(self.pk)
+        super(TaskMember, self).save(*args, **kwargs)
+        if new_instance:
+            Update.objects.create(
+                project=self.task.project,
+                title=f"{self.account.short_name} has been assigned to Task '{self.task.title}'",
+                status="REMARK"
+            )
+            notif_models.Notification.objects.create(
+                user=self.account,
+                title=f"[{self.task.project.summary}] You have been assigned to a task on this project.",
+                message=f"{self.task.title}\n\n{self.task.message}",
+                project=self.task.project
+            )
+
+    def delete(self, *args, **kwargs):
+        Update.objects.create(
+            project=self.task.project,
+            title=f"{self.account.short_name} has been removed from Task '{self.task.title}'",
+            status="REMARK"
+        )
+        super(TaskMember, self).delete(*args, **kwargs)
