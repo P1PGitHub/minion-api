@@ -31,7 +31,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'qba5%6mo#f6x!%$8kzy_cl8^b#u&$zxg83vkexrq)&lf9i)2f+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # DEBUG will add the devices current ip address to this list
 ALLOWED_HOSTS = [
