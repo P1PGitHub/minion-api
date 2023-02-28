@@ -148,12 +148,12 @@ else:
 BUCKET = storage.bucket()
 
 
-EMAIL_HOST = "gator4212.hostgator.com"
+EMAIL_HOST = "box5170.bluehost.com"
 EMAIL_PORT = 465
-EMAIL_HOST_USER = "minion@priority1pos.com"
-EMAIL_HOST_PASSWORD = "Minion#104"
+EMAIL_HOST_USER = "minion@priority1-pos.com"
+EMAIL_HOST_PASSWORD = "Buford#104"
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = "minion@priority1pos.com"
+DEFAULT_FROM_EMAIL = "minion@priority1-pos.com"
 
 
 # Password validation
