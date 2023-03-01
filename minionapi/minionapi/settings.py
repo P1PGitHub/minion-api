@@ -159,17 +159,13 @@ if not DEBUG:
 
 firebase_cred = credentials.Certificate(
     os.path.join(BASE_DIR, "service_accounts/firebase.json"))
-if DEBUG:
-    firebase_admin.initialize_app(firebase_cred, {
-        "storageBucket": "minion-upload-dev"
-    })
-else:
-    firebase_admin.initialize_app(
-        firebase_cred,
-        {
-            "storageBucket": "minion-upload.appspot.com"
-        }
-    )
+
+firebase_admin.initialize_app(
+    firebase_cred,
+    {
+        "storageBucket": "minion-upload.appspot.com"
+    }
+)
 
 BUCKET = storage.bucket()
 
